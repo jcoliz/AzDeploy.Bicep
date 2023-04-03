@@ -26,8 +26,8 @@ param tier string = 'Dynamic'
 ])
 param fnRuntime string = 'dotnet'
 
-@description('Details for required storage resource (name/id)')
-param storage object
+@description('Name of required storage resource')
+param storageName string
 
 @description('Optional application settings environment vars')
 param configuration array = []
@@ -41,7 +41,13 @@ resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   }
 }
 
-var storcstr = 'DefaultEndpointsProtocol=https;AccountName=${storage.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(storage.id, '2022-09-01').keys[0].value}'
+// Retrieve needed details out of storage resource
+resource storage 'Microsoft.Storage/storageAccounts@2022-09-01' existing = {
+  name: storageName
+}
+var storcstr = 'DefaultEndpointsProtocol=https;AccountName=${storage.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${storage.listKeys().keys[0].value}'
+
+// Set standard app settings
 var appsettings = concat(
   [
     {

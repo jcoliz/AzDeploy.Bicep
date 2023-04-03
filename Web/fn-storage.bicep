@@ -1,5 +1,6 @@
 //
-// Deploys Function App with associated storage account
+// Deploys an Azure Functions app
+//    with associated storage account
 //
 
 @description('Unique suffix for all resources in this deployment')
@@ -19,18 +20,11 @@ module storage '../Storage/storage.bicep' = {
 module fn 'fn.bicep' = {
   name: 'fn'
   params: {
-    storage: storage.outputs.result
+    storageName: storage.outputs.result.name
     suffix: suffix
     location: location
   }  
 }
 
-output fn object = {
-  name: fn.outputs.result.name
-  id: fn.outputs.result.id
-}
-
-output storage object = {
-  name: storage.outputs.result.name
-  id: storage.outputs.result.id
-}
+output fn object = fn.outputs.result
+output storage object = storage.outputs.result

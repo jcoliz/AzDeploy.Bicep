@@ -33,7 +33,7 @@ module iotHub 'iothub-upload.bicep' = {
   params: {
     suffix: suffix
     location: location
-    storage: storage.outputs.result
+    storageName: storage.outputs.result.name
     uploadcontainername: containername
   }
 }
@@ -43,7 +43,7 @@ module dps 'dps.bicep' = {
   params: {
     suffix: suffix
     location: location
-    iotHub: iotHub.outputs.result
+    iotHubName: iotHub.outputs.result.name
   }
 }
 

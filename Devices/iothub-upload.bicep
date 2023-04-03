@@ -18,13 +18,17 @@ param sku string = 'S1'
 @description('Number of provisioned units. Restricted to 1 unit for the F1 SKU. Can be set up to maximum number allowed for subscription.')
 param capacity int = 1
 
-@description('Details for required storage resource (name/id)')
-param storage object
+@description('Name of required storage resource')
+param storageName string
 
 @description('Name of container for file uploads')
 param uploadcontainername string = 'uploads'
 
-var storcstr = 'DefaultEndpointsProtocol=https;AccountName=${storage.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(storage.id, '2022-09-01').keys[0].value}'
+// Retrieve needed details out of storage resource
+resource storage 'Microsoft.Storage/storageAccounts@2022-09-01' existing = {
+  name: storageName
+}
+var storcstr = 'DefaultEndpointsProtocol=https;AccountName=${storage.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${storage.listKeys().keys[0].value}'
 var uploadstorage = {
   '$default': {
     connectionString: storcstr
