@@ -21,8 +21,15 @@ param capacity int = 1
 @description('Details for required IoTHub resource (name/id/host)')
 param iotHub object
 
-var key = listKeys(iotHub.id, '2021-07-02').value[0]
-var HUBCSTR = 'HostName=${iotHub.host};SharedAccessKeyName=${key.keyName};SharedAccessKey=${key.primaryKey}'
+resource iot 'Microsoft.Devices/IotHubs@2021-07-02' existing = {
+  name: iotHub.name
+}
+
+var key = iot.listkeys().value[0]
+var host = iot.properties.hostName
+var HUBCSTR = 'HostName=${host};SharedAccessKeyName=${key.keyName};SharedAccessKey=${key.primaryKey}'
+
+output HUBCSTR string = HUBCSTR
 
 resource dps 'Microsoft.Devices/provisioningServices@2022-12-12' = {
   name: '${prefix}-${suffix}'
