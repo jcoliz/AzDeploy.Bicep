@@ -21,7 +21,7 @@ module dps 'dps.bicep' = {
   params: {
     suffix: suffix
     location: location
-    iotHub: iotHub.outputs.result
+    iotHubName: iotHub.outputs.result.name
   }
 }
 

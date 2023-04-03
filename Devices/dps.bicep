@@ -18,18 +18,17 @@ param sku string = 'S1'
 @description('Number of provisioned units. Restricted to 1 unit for the F1 SKU. Can be set up to maximum number allowed for subscription.')
 param capacity int = 1
 
-@description('Details for required IoTHub resource (name/id/host)')
-param iotHub object
+@description('Name of required IoTHub resource')
+param iotHubName string
 
-resource iot 'Microsoft.Devices/IotHubs@2021-07-02' existing = {
-  name: iotHub.name
+// Retrieve needed details out of IoTHub resource
+resource iotHub 'Microsoft.Devices/IotHubs@2021-07-02' existing = {
+  name: iotHubName
 }
 
-var key = iot.listkeys().value[0]
-var host = iot.properties.hostName
+var key = iotHub.listkeys().value[0]
+var host = iotHub.properties.hostName
 var HUBCSTR = 'HostName=${host};SharedAccessKeyName=${key.keyName};SharedAccessKey=${key.primaryKey}'
-
-output HUBCSTR string = HUBCSTR
 
 resource dps 'Microsoft.Devices/provisioningServices@2022-12-12' = {
   name: '${prefix}-${suffix}'
