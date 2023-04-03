@@ -69,17 +69,8 @@ resource ehub 'Microsoft.EventHub/namespaces/eventhubs@2022-10-01-preview' = {
   }
 }
 
-output namespace object = {
-  name: namespace.name
-  id: namespace.id
-}
-
-output key object = {
-  name: key.name
-  id: key.id
-}
-
-output ehub object = {
-  name: ehub.name
-  id: ehub.id
+output result object = {
+  namespace: namespace.name
+  key: key.name
+  hub: ehub.name
 }
