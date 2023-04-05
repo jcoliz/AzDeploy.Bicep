@@ -8,7 +8,7 @@ param suffix string = uniqueString(resourceGroup().id)
 param location string = resourceGroup().location
 
 @description('SKU name.')
-param sku string = 'Standalone'
+param sku string = 'pergb2018'
 
 resource logs 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
   name: '${prefix}-${suffix}'
@@ -17,10 +17,6 @@ resource logs 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
     sku: {
       name: sku
     }
-    retentionInDays: 30
-    features: {
-      immediatePurgeDataOn30Days: true
-    }    
   }
 }
 
