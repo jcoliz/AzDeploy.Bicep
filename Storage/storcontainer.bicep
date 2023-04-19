@@ -15,3 +15,8 @@ resource container 'Microsoft.Storage/storageAccounts/blobServices/containers@20
     publicAccess: 'None'
   }
 }
+
+output result object = {
+  name: container.name
+  id: container.id
+}
