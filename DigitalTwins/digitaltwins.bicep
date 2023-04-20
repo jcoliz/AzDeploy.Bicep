@@ -6,7 +6,7 @@
 //
 
 @description('Descriptor for this resource')
-param prefix string = 'dtwin'
+param prefix string = 'twins'
 
 @description('Unique suffix for all resources in this deployment')
 param suffix string = uniqueString(resourceGroup().id)
