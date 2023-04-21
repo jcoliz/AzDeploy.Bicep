@@ -109,4 +109,5 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
 output result object = {
   name: functionApp.name
   id: functionApp.id
+  principal: functionApp.identity.principalId
 }
