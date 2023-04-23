@@ -48,4 +48,6 @@ output result object = {
   name: iotHub.name
   id: iotHub.id
   host: iotHub.properties.hostName
+  eventpath: iotHub.properties.eventHubEndpoints.events.path
+  eventendpoint: iotHub.properties.eventHubEndpoints.events.endpoint
 }
