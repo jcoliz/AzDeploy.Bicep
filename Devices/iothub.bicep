@@ -21,6 +21,9 @@ param capacity int = 1
 @description('Optional file upload storage endpoint')
 param uploadstorage object = {}
 
+@description('Optional array of routes to establish')
+param routes array = []
+
 resource iotHub 'Microsoft.Devices/IotHubs@2021-07-02' = {
   name: '${prefix}-${suffix}'
   location: location
@@ -31,6 +34,7 @@ resource iotHub 'Microsoft.Devices/IotHubs@2021-07-02' = {
   properties: {
     storageEndpoints: uploadstorage
     routing: {
+      routes: routes
       fallbackRoute: {
         name: '$fallback'
         source: 'DeviceMessages'
