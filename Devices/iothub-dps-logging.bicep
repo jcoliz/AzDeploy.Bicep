@@ -11,11 +11,15 @@ param suffix string = uniqueString(resourceGroup().id)
 @description('Location for all resources.')
 param location string = resourceGroup().location
 
+@description('IoT Hub SKU name.')
+param sku string = 'S1'
+
 module iotHub 'iothub.bicep' = {
   name: 'iotHub'
   params: {
     suffix: suffix
     location: location
+    sku: sku
   }  
 }
 
