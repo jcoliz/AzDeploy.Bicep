@@ -16,6 +16,8 @@ param adminUsername string
 @secure()
 param adminPassword string
 
+param virtualMachineSize string = 'Standard_D2ps_v5'
+
 module nicall '../Network/network-interface-all.bicep' = {
   name: 'nicall'
   params: {
@@ -33,7 +35,7 @@ module vm 'vm.bicep' = {
     adminUsername: adminUsername
     networkInterfaceName: nicall.outputs.name
     osDiskType: 'StandardSSD_LRS'
-    virtualMachineSize: 'Standard_D2ps_v5'
+    virtualMachineSize: virtualMachineSize
     imageReference: {
       publisher: 'microsoftwindowsdesktop'
       offer: 'windows11preview-arm64'
