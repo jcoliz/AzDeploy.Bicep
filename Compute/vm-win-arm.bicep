@@ -42,3 +42,5 @@ module vm 'vm.bicep' = {
     }
   }    
 }
+
+output ipaddr string = nicall.outputs.ipaddr

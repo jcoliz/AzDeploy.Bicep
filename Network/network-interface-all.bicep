@@ -73,3 +73,4 @@ module nic '../Network/network-interface.bicep' = {
 }
 
 output name string = nic.outputs.name
+output ipaddr string = ip.outputs.ipaddr

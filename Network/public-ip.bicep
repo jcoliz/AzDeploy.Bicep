@@ -27,3 +27,4 @@ resource publicIpAddress 'Microsoft.Network/publicIpAddresses@2020-08-01' = {
 }
 
 output name string = publicIpAddress.name
+output ipaddr string = publicIpAddress.properties.ipAddress
