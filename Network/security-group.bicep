@@ -1,3 +1,7 @@
+//
+// Deploys a Network security group for a Virtual Network
+// https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview
+//
 @description('Descriptor for this resource')
 param prefix string = 'sg'
 

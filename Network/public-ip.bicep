@@ -1,3 +1,8 @@
+//
+// Creates an Azure public IP address for a virtual network
+// https://learn.microsoft.com/en-us/azure/virtual-network/ip-services/virtual-network-public-ip-address
+//
+
 @description('Descriptor for this resource')
 param prefix string = 'ip'
 

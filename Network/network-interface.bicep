@@ -1,5 +1,10 @@
+//
+// Creates a network interface (NIC) for a virtual network
+// https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-network-interface
+//
+
 @description('Descriptor for this resource')
-param prefix string = 'ifc'
+param prefix string = 'nic'
 
 @description('Unique suffix for all resources in this deployment')
 param suffix string = uniqueString(resourceGroup().id)

@@ -1,3 +1,8 @@
+//
+// Deploys a Virtual Network
+// https://learn.microsoft.com/en-us/azure/virtual-network/
+//
+
 @description('Descriptor for this resource')
 param prefix string = 'vnet'
 

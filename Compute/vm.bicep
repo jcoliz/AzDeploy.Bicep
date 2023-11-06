@@ -1,6 +1,7 @@
 
 //
 // Deploys a Virtual Machine
+// https://learn.microsoft.com/en-us/azure/virtual-machines/
 //
 
 @description('Descriptor for this resource')
@@ -12,6 +13,7 @@ param suffix string = uniqueString(resourceGroup().id)
 @description('Location for all resources.')
 param location string = resourceGroup().location
 
+param imageReference object
 param virtualMachineSize string
 param osDiskType string
 param adminUsername string
@@ -44,12 +46,7 @@ resource virtualMachine 'Microsoft.Compute/virtualMachines@2022-11-01' = {
         }
         deleteOption: osDiskDeleteOption
       }
-      imageReference: {
-        publisher: 'microsoftwindowsdesktop'
-        offer: 'windows11preview-arm64'
-        sku: 'win11-21h2-pro'
-        version: 'latest'
-      }
+      imageReference: imageReference
     }
     networkProfile: {
       networkInterfaces: [
