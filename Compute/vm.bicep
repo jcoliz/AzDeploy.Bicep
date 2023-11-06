@@ -82,3 +82,5 @@ resource virtualMachine 'Microsoft.Compute/virtualMachines@2022-11-01' = {
     }
   }
 }
+
+output name string = virtualMachine.name
