@@ -18,6 +18,8 @@ param adminPassword string
 
 param virtualMachineSize string = 'Standard_D2ps_v5'
 
+param sku string = 'win11-22h2-pro'
+
 module nicall '../Network/network-interface-all.bicep' = {
   name: 'nicall'
   params: {
@@ -39,7 +41,7 @@ module vm 'vm.bicep' = {
     imageReference: {
       publisher: 'microsoftwindowsdesktop'
       offer: 'windows11preview-arm64'
-      sku: 'win11-21h2-pro'
+      sku: sku
       version: 'latest'
     }
   }    
