@@ -54,7 +54,7 @@ resource webapp 'Microsoft.Web/sites@2022-03-01' = {
   properties: {
     serverFarmId: hostingPlan.id
     siteConfig: {
-      linuxFxVersion: 'DOTNETCORE|7.0'
+      linuxFxVersion: 'DOTNETCORE|8.0'
       appSettings: appsettings
       minTlsVersion: '1.2'
     }
