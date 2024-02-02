@@ -11,6 +11,9 @@ param suffix string = uniqueString(resourceGroup().id)
 @description('Location for all resources.')
 param location string = resourceGroup().location
 
+@description('Optional custom domain to assign')
+param customDomain string = ''
+
 param administratorLogin string
 @secure()
 param administratorLoginPassword string
@@ -41,6 +44,17 @@ module webSqlConfig './webapp-sql-config.bicep' = {
     webAppName: web.outputs.webAppName
     administratorLogin: administratorLogin
     administratorLoginPassword: administratorLoginPassword
+  }
+}
+
+module certificate './certificate.bicep' = if (!empty(customDomain))  {
+  name: 'certificate'
+  params: {
+    suffix: suffix
+    location: location
+    customDomain: customDomain
+    webAppName: web.outputs.webAppName
+    hostingPlanName: web.outputs.hostingPlanName 
   }
 }
 

@@ -63,3 +63,4 @@ resource webapp 'Microsoft.Web/sites@2022-03-01' = {
 }
 
 output webAppName string = webapp.name
+output hostingPlanName string = hostingPlan.name
