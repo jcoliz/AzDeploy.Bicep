@@ -62,8 +62,4 @@ resource webapp 'Microsoft.Web/sites@2022-03-01' = {
   }
 }
 
-output result object = {
-  name: webapp.name
-  id: webapp.id
-  principal: webapp.identity.principalId
-}
+output webAppName string = webapp.name
