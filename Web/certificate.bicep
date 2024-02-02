@@ -1,4 +1,9 @@
 
+//
+// Creates a TLS/SSL certificat for an Azure App Service
+//  https://learn.microsoft.com/en-us/azure/app-service/configure-ssl-certificate
+//
+
 param customDomain string = 'www.chompr.net'
 
 @description('Unique suffix for all resources in this deployment')
