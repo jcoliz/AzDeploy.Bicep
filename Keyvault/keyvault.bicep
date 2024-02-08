@@ -89,3 +89,5 @@ resource secrets 'Microsoft.KeyVault/vaults/secrets@2021-04-01-preview' = [for s
 }]
 
 output name string = kv.name
+output endpoint string = kv.properties.vaultUri
+
