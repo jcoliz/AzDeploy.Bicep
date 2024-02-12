@@ -32,3 +32,5 @@ resource givenIdToDigitalTwinsRoleAssignment 'Microsoft.Authorization/roleAssign
     principalType: principalType
   }
 }
+
+output roleAssignmentName string = givenIdToDigitalTwinsRoleAssignment.name

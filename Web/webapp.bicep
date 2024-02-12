@@ -21,6 +21,9 @@ param tier string = 'Basic'
 @description('Optional application settings environment vars')
 param configuration array = []
 
+@description('Optional domain verification ID. Put this as a TXT DNS entry on ASUID.{yourdomain.com}')
+param customDomainVerificationId string = ''
+
 resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: 'farm-${suffix}'
   location: location
@@ -41,11 +44,15 @@ var appsettings = concat(
       name: 'ASPNETCORE_ENVIRONMENT'
       value: 'Production'
     }
+    {
+      name: 'WEBSITE_HTTPLOGGING_RETENTION_DAYS'
+      value: '5'
+    }
   ],
   configuration
 )
 
-resource webapp 'Microsoft.Web/sites@2022-03-01' = {
+resource webapp 'Microsoft.Web/sites@2023-01-01' = {
   name: '${prefix}-${suffix}'
   location: location
   identity: {
@@ -53,12 +60,35 @@ resource webapp 'Microsoft.Web/sites@2022-03-01' = {
   }
   properties: {
     serverFarmId: hostingPlan.id
+    httpsOnly: true
+    customDomainVerificationId: customDomainVerificationId
     siteConfig: {
       linuxFxVersion: 'DOTNETCORE|8.0'
       appSettings: appsettings
       minTlsVersion: '1.2'
+      alwaysOn: true
+      httpLoggingEnabled: true
+      logsDirectorySizeLimit: 35
     }
-    httpsOnly: false
+  }
+}
+
+resource logs 'Microsoft.Web/sites/config@2023-01-01' = {
+  name: 'logs'
+  parent: webapp
+  properties: {
+    applicationLogs: {
+      fileSystem: {
+        level: 'Information'
+      }
+    }
+    httpLogs: {
+      fileSystem: {
+        enabled: true
+        retentionInDays: 5
+        retentionInMb: 35
+      }
+    }
   }
 }
 
