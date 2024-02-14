@@ -32,6 +32,23 @@ resource kv 'Microsoft.KeyVault/vaults@2023-07-01' existing = if (!empty(keyVaul
   scope: resourceGroup(keyVaultGroup)
 } 
 
+module logs '../OperationalInsights/loganalytics.bicep' = {
+  name: 'logs'
+  params: {
+    suffix: suffix
+    location: location
+  }
+}
+
+module insights '../Insights/appinsights.bicep' = {
+  name: 'insights'
+  params: {
+    suffix: suffix
+    location: location
+    logAnalyticsName: logs.outputs.logAnalyticsName
+  }
+}
+
 var configuration = empty(keyVaultName) ? [] : [
   {
     name: 'KEYVAULTENDPOINT'
@@ -56,6 +73,7 @@ module web './webapp.bicep' = {
     location: location
     customDomainVerificationId: customDomainVerificationId
     configuration: configuration
+    insightsName: insights.outputs.name
   }
 }
 

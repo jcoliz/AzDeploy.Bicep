@@ -1,7 +1,9 @@
 @description('Descriptor for this resource')
+@minLength(2)
 param prefix string = 'logs'
 
 @description('Unique suffix for all resources in this deployment')
+@minLength(5)
 param suffix string = uniqueString(resourceGroup().id)
 
 @description('Location for all resources.')
@@ -24,3 +26,4 @@ output result object = {
   name: logs.name
   id: logs.id
 }
+output logAnalyticsName string = logs.name

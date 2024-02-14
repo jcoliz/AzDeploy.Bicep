@@ -24,6 +24,28 @@ param configuration array = []
 @description('Optional domain verification ID. Put this as a TXT DNS entry on ASUID.{yourdomain.com}')
 param customDomainVerificationId string = ''
 
+@description('Name of optional app insights resource')
+param insightsName string = ''
+
+resource insights 'Microsoft.Insights/components@2020-02-02-preview' existing = if (!empty(insightsName)) {
+  name: insightsName
+}
+
+var insightsSettings = empty(insightsName) ? [] : [
+  {
+    name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+    value: insights.properties.ConnectionString
+  }
+  {
+    name: 'ApplicationInsightsAgent_EXTENSION_VERSION'
+    value: '~2'
+  }
+  {
+    name: 'XDT_MicrosoftApplicationInsights_Mode'
+    value: 'default'
+  }  
+]
+
 resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: 'farm-${suffix}'
   location: location
@@ -48,7 +70,8 @@ var appsettings = concat(
       name: 'WEBSITE_HTTPLOGGING_RETENTION_DAYS'
       value: '5'
     }
-  ],
+  ],  
+  insightsSettings,
   configuration
 )
 
