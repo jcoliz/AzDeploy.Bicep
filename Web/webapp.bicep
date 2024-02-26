@@ -82,6 +82,7 @@ resource webapp 'Microsoft.Web/sites@2023-01-01' = {
     type: 'SystemAssigned'
   }
   properties: {
+    clientAffinityEnabled: false
     serverFarmId: hostingPlan.id
     httpsOnly: true
     customDomainVerificationId: customDomainVerificationId
