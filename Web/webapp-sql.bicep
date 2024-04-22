@@ -17,11 +17,14 @@ param customDomain string = ''
 @description('Optional domain verification ID. Put this as a TXT DNS entry on ASUID.{yourdomain.com}')
 param customDomainVerificationId string = ''
 
-@description('Name of optional key vault resource')
-param keyVaultName string
+@description('Optional application settings environment vars')
+param configuration array = []
 
-@description('Name of resource group containing key vault resource')
-param keyVaultGroup string
+@description('Optional name of key vault resource')
+param keyVaultName string = ''
+
+@description('Optional name of resource group containing key vault resource, required if key vault resource supplied')
+param keyVaultGroup string = ''
 
 param administratorLogin string
 @secure()
@@ -49,12 +52,17 @@ module insights '../Insights/appinsights.bicep' = {
   }
 }
 
-var configuration = empty(keyVaultName) ? [] : [
+var kvconfiguration = empty(keyVaultName) ? [] : [
   {
     name: 'KEYVAULTENDPOINT'
     value: kv.properties.vaultUri
   }
 ]
+
+var mergedconfiguration = concat(
+  configuration,
+  kvconfiguration
+)
 
 module sql '../Sql/sql.bicep' = {
   name: 'sql'
@@ -72,7 +80,7 @@ module web './webapp.bicep' = {
     suffix: suffix
     location: location
     customDomainVerificationId: customDomainVerificationId
-    configuration: configuration
+    configuration: mergedconfiguration
     insightsName: insights.outputs.name
   }
 }
@@ -112,4 +120,4 @@ module kvrole 'webapp-kv-role.bicep' = if (!empty(keyVaultName)) {
 output sqlServerName string = sql.outputs.serverName
 output sqlDbName string = sql.outputs.dbName
 output webAppName string = web.outputs.webAppName
-output roleAssignmentName string = kvrole.outputs.roleAssignmentName
+output roleAssignmentName string = !empty(keyVaultName) ? kvrole.outputs.roleAssignmentName : ''
