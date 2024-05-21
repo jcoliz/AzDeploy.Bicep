@@ -6,6 +6,7 @@
 //
 
 @description('Descriptor for the parent namespace resource')
+@minLength(3)
 param prefix string = 'ehubns'
 
 @description('Descriptor for the hub resource')
@@ -15,6 +16,7 @@ param hubname string = 'ehub'
 param keyname string = 'SendKey'
 
 @description('Unique suffix for all resources in this deployment')
+@minLength(3)
 param suffix string = uniqueString(resourceGroup().id)
 
 @description('Location for all resources.')
@@ -74,3 +76,8 @@ output result object = {
   key: key.name
   hub: ehub.name
 }
+
+output namespace string = namespace.name
+output id string = namespace.id
+output key string = key.name
+output hub string = ehub.name
