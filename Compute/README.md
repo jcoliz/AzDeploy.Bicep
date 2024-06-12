@@ -1,9 +1,11 @@
 # How to deploy a Windows Arm virtual machine using Azure Resource Manager
 
-## Pre-requisities
+The Azure CLI is used to create and manage Azure resources from the command line or in scripts. This document shows you how to use the Azure CLI to deploy a virtual machine (VM) in Azure that runs Windows Pro 22H2 on Arm-based hardware. To see your VM in action, you then RDP to the VM .
 
-1. An Azure Account
-2. Azure CLI
+## Prerequisites
+
+1. Azure subscription: If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F) before you begin.
+2. Azure CLI: Install the [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) tools locally on your machine.
 
 ## Step 1: Obtain the files here
 
@@ -28,7 +30,13 @@ Otherwise, you can download the files from GitHub.
 
 ## Step 2: Sign into Azure from CLI
 
-TODO
+Before continuing, you'll need to sign into Azure with the Azure CLI. It's pretty easy:
+
+```powershell
+az login
+```
+
+For more details, read up at [Sign in interactively with Azure CLI](https://learn.microsoft.com/en-us/cli/azure/authenticate-azure-cli-interactively)
 
 ## Step 3: Create a resource group
 
