@@ -91,10 +91,6 @@ mstsc /v:$env:IP /prompt
 The previous deployment step asks you to type in the admin password user each time you deploy a VM. You can automate this,
 as well as change other default parameters in the deployment by using a parameters file.
 
-1. Copy the file `vm-win-arm.parameters.template.json` to `vm-win-arm.parameters.json`
-2. Edit the file with your desired admin username and password, and potentially other configuration changes you'd like to make
-3. Include the parameters file in your deployment:
-
 ``` powershell
 {
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
@@ -116,8 +112,9 @@ as well as change other default parameters in the deployment by using a paramete
 }
 ```
 
-With that set up, you can include that parameters file in your deployment
-command:
+1. Copy the file `vm-win-arm.parameters.template.json` to `vm-win-arm.parameters.json`
+2. Edit the file with your desired admin username and password, and potentially other configuration changes you'd like to make
+3. Include the parameters file in your deployment:
 
 ```powershell
 az deployment group create --name "Deploy-$(Get-Random)" --resource-group $env:RESOURCEGROUP --template-file .\vm-win-arm.bicep --parameters .\azuredeploy.parameters.json
