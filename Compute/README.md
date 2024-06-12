@@ -55,7 +55,7 @@ Please provide string value for 'adminUsername' (? for help):
 Please provide securestring value for 'adminPassword' (? for help):
 ```
 
-Creating Arm VMs can be flaky. If it takes more than 5 minutes, cancel the deployment,
+Creating Arm VMs can be flaky. If the deployment takes more than 5 minutes, cancel the deployment,
 delete the Resource Group, create another one with a new name, and try deploying
 again.
 
