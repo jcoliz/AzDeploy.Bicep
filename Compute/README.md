@@ -40,7 +40,7 @@ For more details, read up at [Sign in interactively with Azure CLI](https://lear
 
 ## Step 3: Create a resource group
 
-Use the command line to create a dedicated resource group for the VM. I like to use environment variables to
+Create a dedicated resource group for the VM. I like to use environment variables to
 avoid mis-typing the resource group later. Choose the location which best suits your needs.
 
 ```powershell
@@ -84,7 +84,7 @@ When the deployment completes, look for the `outputs`section in the results.
     }
 ```
 
-You can launch the Remote Desktop Client to create a connection to the IP address
+You can launch the Remote Desktop Client to interactively create a connection to the IP address
 shown in the outputs.
 
 Alternately, you can run the RDP client directly from the terminal:
@@ -120,8 +120,8 @@ as well as change other default parameters in the deployment by using a paramete
 }
 ```
 
-1. Copy the file `vm-win-arm.parameters.template.json` to `vm-win-arm.parameters.json`
-2. Edit the file with your desired admin username and password, and potentially other configuration changes you'd like to make
+1. Copy the file `vm-win-arm.parameters.template.json` to `vm-win-arm.parameters.json`.
+2. Edit the file with your desired admin username and password, and potentially other configuration changes you'd like to make. In this example, we're choosing the 23H2 Pro sku instead of the default 22H2.
 3. Include the parameters file in your deployment:
 
 ```powershell
@@ -130,7 +130,7 @@ az deployment group create --name "Deploy-$(Get-Random)" --resource-group $env:R
 
 ## Step 7: Tear down the VM afterward
 
-When you're all done, be sure to tear down the VM to avoid ongoing changes:
+When you're all done, be sure to tear down the VM to avoid ongoing charges:
 
 ```powershell
 az group delete --yes --name $env:RESOURCEGROUP
