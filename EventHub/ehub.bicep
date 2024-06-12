@@ -13,7 +13,10 @@ param prefix string = 'ehubns'
 param hubname string = 'ehub'
 
 @description('Name of sending key')
-param keyname string = 'SendKey'
+param sendkeyname string = 'SendKey'
+
+@description('Name of listening key')
+param listenkeyname string = 'ListenKey'
 
 @description('Unique suffix for all resources in this deployment')
 @minLength(3)
@@ -47,12 +50,22 @@ resource namespace 'Microsoft.EventHub/namespaces@2022-10-01-preview' = {
   }
 }
 
-resource key 'Microsoft.EventHub/namespaces/authorizationrules@2022-10-01-preview' = {
+resource sendkey 'Microsoft.EventHub/namespaces/authorizationrules@2022-10-01-preview' = {
   parent: namespace
-  name: keyname
+  name: sendkeyname
   properties: {
     rights: [
       'Send'
+    ]
+  }
+}
+
+resource listenkey 'Microsoft.EventHub/namespaces/authorizationrules@2022-10-01-preview' = {
+  parent: namespace
+  name: sendkeyname
+  properties: {
+    rights: [
+      'Listen'
     ]
   }
 }
@@ -73,11 +86,12 @@ resource ehub 'Microsoft.EventHub/namespaces/eventhubs@2022-10-01-preview' = {
 
 output result object = {
   namespace: namespace.name
-  key: key.name
+  key: sendkey.name
   hub: ehub.name
 }
 
 output namespace string = namespace.name
 output id string = namespace.id
-output key string = key.name
+output sendkey string = sendkey.name
 output hub string = ehub.name
+output listenkey string = listenkeyname
