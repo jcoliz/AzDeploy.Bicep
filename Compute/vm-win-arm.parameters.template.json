@@ -1,0 +1,18 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "adminUsername": {
+            "value": ""
+        },
+        "adminPassword": {
+            "value": ""
+        },
+        "virtualMachineSize": {
+            "value": "Standard_D2ps_v5"
+        },
+        "sku": {
+            "value": "win11-23h2-pro"
+        }
+    }
+}
