@@ -9,7 +9,7 @@ param suffix string = uniqueString(resourceGroup().id)
 @description('Location for all resources.')
 param location string = resourceGroup().location
 
-@description('Name ofrequired log analytics resource')
+@description('Name of required log analytics resource')
 param logAnalyticsName string
 
 resource logs 'Microsoft.OperationalInsights/workspaces@2020-08-01' existing = {
