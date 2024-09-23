@@ -1,3 +1,7 @@
+//
+// Deploys connection strings on a web app
+//
+
 @description('Name of required web app resource')
 param webAppName string
 
@@ -10,6 +14,15 @@ param sqlDbName string
 param administratorLogin string
 @secure()
 param administratorLoginPassword string
+
+@description('(Optional) Name of storage resource')
+param storageName string = ''
+
+resource storage 'Microsoft.Storage/storageAccounts@2023-05-01' existing = if (!empty(storageName)) {
+  name: storageName
+}
+
+var cstr_storage = (!empty(storageName)) ? 'DefaultEndpointsProtocol=https;AccountName=${storageName};AccountKey=${storage.listKeys().keys[0].value};EndpointSuffix=${environment().suffixes.storage}' : ''
 
 resource server 'Microsoft.Sql/servers@2021-05-01-preview' existing = {
   name: sqlServerName
@@ -28,6 +41,10 @@ resource config 'Microsoft.Web/sites/config@2023-01-01' = {
     DefaultConnection : {
       value: cstr
       type: 'SQLAzure'
+    }
+    StorageConnection : {
+      value: cstr_storage
+      type: 'Custom'
     }
   }
 }

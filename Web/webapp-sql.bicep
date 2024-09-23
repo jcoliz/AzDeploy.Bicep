@@ -11,6 +11,9 @@ param suffix string = uniqueString(resourceGroup().id)
 @description('Location for all resources.')
 param location string = resourceGroup().location
 
+@description('Hosting plan SKU.')
+param sku string = 'B1'
+
 @description('Optional custom domain to assign')
 param customDomain string = ''
 
@@ -29,6 +32,9 @@ param keyVaultGroup string = ''
 param administratorLogin string
 @secure()
 param administratorLoginPassword string
+
+@description('Optional flag whether we should also deploy associated storage (default false)')
+param includeStorage bool = false
 
 resource kv 'Microsoft.KeyVault/vaults@2023-07-01' existing = if (!empty(keyVaultName)) {
   name: keyVaultName
@@ -79,20 +85,10 @@ module web './webapp.bicep' = {
   params: {
     suffix: suffix
     location: location
+    sku: sku
     customDomainVerificationId: customDomainVerificationId
     configuration: mergedconfiguration
     insightsName: insights.outputs.name
-  }
-}
-
-module webSqlConfig './webapp-sql-config.bicep' = {
-  name: 'sqlconfig'
-  params: {
-    sqlServerName: sql.outputs.serverName
-    sqlDbName: sql.outputs.dbName
-    webAppName: web.outputs.webAppName
-    administratorLogin: administratorLogin
-    administratorLoginPassword: administratorLoginPassword
   }
 }
 
@@ -117,7 +113,28 @@ module kvrole 'webapp-kv-role.bicep' = if (!empty(keyVaultName)) {
   }
 }
 
+module storage '../Storage/storage.bicep' = if (includeStorage) {
+  name: 'storage'
+  params: {
+    suffix: suffix
+    location: location
+  }
+}
+
+module webSqlConfig './webapp-sql-config.bicep' = {
+  name: 'sqlconfig'
+  params: {
+    sqlServerName: sql.outputs.serverName
+    sqlDbName: sql.outputs.dbName
+    storageName: includeStorage ? storage.outputs.storageName : ''
+    webAppName: web.outputs.webAppName
+    administratorLogin: administratorLogin
+    administratorLoginPassword: administratorLoginPassword
+  }
+}
+
 output sqlServerName string = sql.outputs.serverName
 output sqlDbName string = sql.outputs.dbName
 output webAppName string = web.outputs.webAppName
+output storageName string = storage.outputs.storageName
 output roleAssignmentName string = !empty(keyVaultName) ? kvrole.outputs.roleAssignmentName : ''

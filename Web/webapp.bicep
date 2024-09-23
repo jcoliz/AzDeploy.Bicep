@@ -37,8 +37,12 @@ var insightsSettings = empty(insightsName) ? [] : [
     value: insights.properties.ConnectionString
   }
   {
+    name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+    value: insights.properties.InstrumentationKey
+  }
+  {
     name: 'ApplicationInsightsAgent_EXTENSION_VERSION'
-    value: '~2'
+    value: '~3'
   }
   {
     name: 'XDT_MicrosoftApplicationInsights_Mode'
@@ -90,7 +94,7 @@ resource webapp 'Microsoft.Web/sites@2023-01-01' = {
       linuxFxVersion: 'DOTNETCORE|8.0'
       appSettings: appsettings
       minTlsVersion: '1.2'
-      alwaysOn: true
+      alwaysOn: (sku == 'F1') ? false : true
       httpLoggingEnabled: true
       logsDirectorySizeLimit: 35
     }
