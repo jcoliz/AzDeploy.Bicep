@@ -27,3 +27,4 @@ output result object = {
   id: logs.id
 }
 output logAnalyticsName string = logs.name
+output name string = logs.name
