@@ -21,3 +21,4 @@ resource endpoint 'Microsoft.Insights/dataCollectionEndpoints@2023-03-11' = {
 
 output name string = endpoint.name
 output id string = endpoint.id
+output EndpointUri string = endpoint.properties.logsIngestion.endpoint
