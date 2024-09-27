@@ -119,3 +119,5 @@ output result object = {
   id: functionApp.id
   principal: functionApp.identity.principalId
 }
+
+output principal string = functionApp.identity.principalId
