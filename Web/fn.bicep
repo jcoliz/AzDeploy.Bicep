@@ -22,9 +22,13 @@ param tier string = 'Dynamic'
 @allowed([
   'node'
   'dotnet'
+  'dotnet-isolated'
   'java'
+  'powershell'
+  'python'
+  'custom'
 ])
-param fnRuntime string = 'dotnet'
+param fnRuntime string = 'dotnet-isolated'
 
 @description('Name of required storage resource')
 param storageName string
@@ -42,12 +46,16 @@ resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
 }
 
 // Retrieve needed details out of storage resource
-resource storage 'Microsoft.Storage/storageAccounts@2022-09-01' existing = {
+resource storage 'Microsoft.Storage/storageAccounts@2023-05-01' existing = {
   name: storageName
 }
+
 var storcstr = 'DefaultEndpointsProtocol=https;AccountName=${storage.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${storage.listKeys().keys[0].value}'
 
+var functionAppName = toLower('${prefix}-${suffix}')
+
 // Set standard app settings
+// https://learn.microsoft.com/en-us/azure/azure-functions/functions-app-settings
 var appsettings = concat(
   [
     {
@@ -60,7 +68,7 @@ var appsettings = concat(
     }
     {
       name: 'WEBSITE_CONTENTSHARE'
-      value: toLower('${prefix}-${suffix}')
+      value: functionAppName
     }
     {
       name: 'FUNCTIONS_EXTENSION_VERSION'
@@ -79,7 +87,7 @@ var appsettings = concat(
 )
 
 resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
-  name: '${prefix}-${suffix}'
+  name: functionAppName
   location: location
   kind: 'functionapp'
   identity: {
