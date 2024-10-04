@@ -36,7 +36,7 @@ param storageName string
 @description('Optional application settings environment vars')
 param configuration array = []
 
-resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
+resource hostingPlan 'Microsoft.Web/serverfarms@2023-12-01' = {
   name: 'farm-${suffix}'
   location: location
   sku: {
