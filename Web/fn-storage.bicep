@@ -33,3 +33,5 @@ module fn 'fn.bicep' = {
 output fn object = fn.outputs.result
 output storage object = storage.outputs.result
 output principal string = fn.outputs.principal
+output functionAppName string = fn.outputs.functionAppName
+output storageName string = storage.outputs.storageName

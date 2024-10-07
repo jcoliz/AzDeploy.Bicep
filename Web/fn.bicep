@@ -121,3 +121,4 @@ output result object = {
 }
 
 output principal string = functionApp.identity.principalId
+output functionAppName string = functionApp.name
