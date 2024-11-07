@@ -32,3 +32,5 @@ resource staticapp 'Microsoft.Web/staticSites@2023-12-01' = {
     stagingEnvironmentPolicy: 'Enabled'
   }
 }
+
+output defaultHostname string = staticapp.properties.defaultHostname

@@ -37,6 +37,8 @@ resource staticapp 'Microsoft.Web/staticSites@2023-12-01' = {
 }
 
 resource domain 'Microsoft.Web/staticSites/customDomains@2023-12-01' = {  
-  name: customDomain
   parent: staticapp
+  name: customDomain
 }
+
+output defaultHostname string = staticapp.properties.defaultHostname
