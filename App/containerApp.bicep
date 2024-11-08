@@ -42,7 +42,11 @@ param maxReplicas int = 3
 @description('Name of required environment resource')
 param containerAppEnvName string
 
-var containerAppName ='${prefix}-${suffix}'
+param revisionSuffix string = 'r-${uniqueString('${prefix}-${suffix}', utcNow())}'
+
+param external bool = true
+
+var containerAppName = '${prefix}-${suffix}'
 
 resource containerAppEnv 'Microsoft.App/managedEnvironments@2024-03-01' existing = {
   name: containerAppEnvName
@@ -54,7 +58,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
   properties: {
     managedEnvironmentId: containerAppEnv.id
     configuration: {
-      ingress: {
+      ingress: external ? {
         external: true
         targetPort: ingressPort
         allowInsecure: false
@@ -64,10 +68,20 @@ resource containerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
             weight: 100
           }
         ]
+      } : {
+        external: false
+        targetPort: ingressPort
+        transport: 'tcp'
+        traffic: [
+          {
+            latestRevision: true
+            weight: 100
+          }
+        ]
       }
     }
     template: {
-      revisionSuffix: 'r1'
+      revisionSuffix: revisionSuffix
       containers: containers
       scale: {
         minReplicas: minReplicas
@@ -77,4 +91,5 @@ resource containerApp 'Microsoft.App/containerApps@2022-06-01-preview' = {
   }
 }
 
+output name string = containerApp.name
 output fqdn string = containerApp.properties.configuration.ingress.fqdn
