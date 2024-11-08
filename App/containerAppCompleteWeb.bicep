@@ -1,5 +1,5 @@
 //
-// Deploys a simple sample container app with dedicated workspace
+// Deploys a simple containerized web app with dedicated workspace
 //
 // Visit the deployed website using https://{fqdn}/, where {fqdn} is the
 // output of this deployment.
@@ -11,6 +11,9 @@ param suffix string = uniqueString(resourceGroup().id)
 
 @description('Location for all resources.')
 param location string = resourceGroup().location
+
+@description('Optional container image name for web app')
+param webImageName string = 'nginxdemos/hello:latest'
 
 // Deploy Log Anaytics Workspace
 
@@ -36,16 +39,16 @@ module cenv './managedEnvironments.bicep' = {
 // Deploy Web Container App
 
 module cweb './containerApp.bicep' = {
-  name: 'web'
+  name: 'c-web'
   params: {
-    prefix: 'web'
+    prefix: 'c-web'
     suffix: suffix
     location: location
     containerAppEnvName: cenv.outputs.name
     containers: [
       {        
         name: 'web'
-        image: 'nginxdemos/hello:latest'
+        image: webImageName
         resources: {
           cpu: json('0.25')
           memory: '.5Gi'
