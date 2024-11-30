@@ -41,4 +41,5 @@ resource domain 'Microsoft.Web/staticSites/customDomains@2023-12-01' = {
   name: customDomain
 }
 
+output name string = staticapp.name
 output defaultHostname string = staticapp.properties.defaultHostname
