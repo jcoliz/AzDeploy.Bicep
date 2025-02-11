@@ -1,3 +1,9 @@
+//
+// Deploys a Data Collection Rule
+//    https://learn.microsoft.com/en-us/azure/templates/microsoft.insights/datacollectionrules
+//    https://learn.microsoft.com/en-us/azure/azure-monitor/logs/logs-ingestion-api-overview#data-collection-rule-dcr
+//
+
 @description('Descriptor for this resource')
 @minLength(2)
 param prefix string = 'dcr'
@@ -12,8 +18,8 @@ param location string = resourceGroup().location
 @description('Name of required log analytics resource')
 param logAnalyticsName string
 
-@description('Name of required data collection endpoint resource')
-param endpointName string
+@description('Name of optional data collection endpoint resource. If not specified, will create a direct ingestion rule')
+param endpointName string = ''
 
 @description('Name of table in log workspace')
 param tableName string
@@ -26,22 +32,26 @@ param inputColumns array
 
 var streamName = 'Custom-${tableName}'
 
+var isDirectiIngestion = empty(endpointName)
+
+var dcepProps = !isDirectiIngestion ? {
+  dataCollectionEndpointId: endpoint.id
+} : {}
+
 resource logs 'Microsoft.OperationalInsights/workspaces@2020-08-01' existing = {
   name: logAnalyticsName
 }
 
-resource endpoint 'Microsoft.Insights/dataCollectionEndpoints@2023-03-11' existing = {
+resource endpoint 'Microsoft.Insights/dataCollectionEndpoints@2023-03-11' existing = if (!isDirectiIngestion)  {
   name: endpointName
 }
 
-// Note that we are creating the table at the same time we create the
-// DCR, as they are tightly coupled
-
 resource dcr 'Microsoft.Insights/dataCollectionRules@2023-03-11' = {
   name: '${prefix}-${suffix}'
-  location: location
+  location: location  
+  kind: isDirectiIngestion ? 'Direct' : 'WorkspaceTransforms' // https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/data-collection-rule-structure#kind
   properties: {
-    dataCollectionEndpointId: endpoint.id
+    ...dcepProps
     destinations: {
       logAnalytics: [
         {
@@ -73,3 +83,4 @@ resource dcr 'Microsoft.Insights/dataCollectionRules@2023-03-11' = {
 output name string = dcr.name
 output DcrImmutableId string = dcr.properties.immutableId
 output Stream string = streamName
+output EndpointUri string = isDirectiIngestion ? dcr.properties.endpoints.logsIngestion : ''
