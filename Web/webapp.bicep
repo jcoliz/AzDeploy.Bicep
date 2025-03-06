@@ -91,7 +91,7 @@ resource webapp 'Microsoft.Web/sites@2023-01-01' = {
     httpsOnly: true
     customDomainVerificationId: customDomainVerificationId
     siteConfig: {
-      linuxFxVersion: 'DOTNETCORE|8.0'
+      linuxFxVersion: 'DOTNETCORE|9.0'
       appSettings: appsettings
       minTlsVersion: '1.2'
       alwaysOn: (sku == 'F1') ? false : true
