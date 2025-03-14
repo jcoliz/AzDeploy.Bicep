@@ -15,6 +15,9 @@ param location string = resourceGroup().location
 @description('Optional container image name for web app')
 param webImageName string = 'nginxdemos/hello:latest'
 
+@description('Optional ingress port for web app')
+param ingressPort int = 80
+
 // Deploy Log Anaytics Workspace
 
 module logs '../OperationalInsights/loganalytics.bicep' = {
@@ -45,6 +48,7 @@ module cweb './containerApp.bicep' = {
     suffix: suffix
     location: location
     containerAppEnvName: cenv.outputs.name
+    ingressPort: ingressPort
     containers: [
       {        
         name: 'web'
