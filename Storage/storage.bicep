@@ -15,13 +15,16 @@ param location string = resourceGroup().location
 @description('SKU name.')
 param sku string = 'Standard_LRS'
 
-resource storage 'Microsoft.Storage/storageAccounts@2023-05-01' = {
+resource storage 'Microsoft.Storage/storageAccounts@2024-01-01' = {
   name: '${prefix}000${suffix}'
   location: location
   sku: {
     name: sku
   }
-  kind: 'Storage'
+  kind: 'StorageV2'
+  properties: {
+    accessTier: 'Hot'
+  }
 }
 
 output result object = {
