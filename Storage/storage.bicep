@@ -30,3 +30,4 @@ output result object = {
 }
 
 output storageName string = storage.name
+output storageEndpoint object = storage.properties.primaryEndpoints
