@@ -66,3 +66,4 @@ module cweb './containerApp.bicep' = {
 }
 
 output fqdn string = cweb.outputs.fqdn
+output principal string = cweb.outputs.principal
