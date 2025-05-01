@@ -21,9 +21,9 @@ resource container 'Microsoft.Storage/storageAccounts/blobServices/containers@20
 }
 
 // Assigns the given principal id input data owner of Digital Twins resource
-resource givenIdToDigitalTwinsRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(container.id, principalId, azureRbacStorageBlobDataContributor)
+resource givenIdToBlobContributorRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   scope: container
+  name: guid(container.id, principalId, azureRbacStorageBlobDataContributor)
   properties: {
     principalId: principalId
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', azureRbacStorageBlobDataContributor)
