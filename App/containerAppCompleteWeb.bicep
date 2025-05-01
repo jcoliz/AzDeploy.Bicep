@@ -18,6 +18,9 @@ param webImageName string = 'nginxdemos/hello:latest'
 @description('Optional ingress port for web app')
 param ingressPort int = 80
 
+@description('Array of environment vars')
+param env array = []
+
 // Deploy Log Anaytics Workspace
 
 // TODO: Should allow to send this in, in case we are already deploying
@@ -60,6 +63,7 @@ module cweb './containerApp.bicep' = {
           cpu: json('0.25')
           memory: '.5Gi'
         }
+        env: env
       }
     ]
   }
