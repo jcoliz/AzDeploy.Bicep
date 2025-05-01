@@ -20,3 +20,4 @@ output result object = {
   name: container.name
   id: container.id
 }
+output name string = container.name
