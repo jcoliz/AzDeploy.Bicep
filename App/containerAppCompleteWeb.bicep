@@ -20,9 +20,12 @@ param ingressPort int = 80
 
 // Deploy Log Anaytics Workspace
 
-module logs '../OperationalInsights/loganalytics.bicep' = {
-  name: 'logs'
+// TODO: Should allow to send this in, in case we are already deploying
+// an LAW and we just want to use that.
+module applogs '../OperationalInsights/loganalytics.bicep' = {
+  name: 'applogs'
   params: {
+    prefix: 'applogs'
     suffix: suffix
     location: location
   }
@@ -35,7 +38,7 @@ module cenv './managedEnvironments.bicep' = {
   params: {
     suffix: suffix
     location: location
-    logAnalyticsName: logs.outputs.name
+    logAnalyticsName: applogs.outputs.name
   }
 }
 
