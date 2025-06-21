@@ -28,36 +28,5 @@ resource insights 'microsoft.insights/components@2020-02-02-preview' = {
 }
 
 output name string = insights.name
-
-/*
-resource name 'Microsoft.Web/sites@2018-11-01' = {
-  name: name_param
-  location: location
-  tags: {}
-  properties: {
-    name: name_param
-    siteConfig: {
-      appSettings: [
-        {
-          name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
-          value: reference(
-            'microsoft.insights/components/app-logs-test',
-            '2015-05-01'
-          ).ConnectionString
-        }
-        {
-          name: 'ApplicationInsightsAgent_EXTENSION_VERSION'
-          value: '~2'
-        }
-        {
-          name: 'XDT_MicrosoftApplicationInsights_Mode'
-          value: 'default'
-        }
-      ]
-      linuxFxVersion: linuxFxVersion
-      alwaysOn: alwaysOn
-      ftpsState: ftpsState
-    }
-  }
-}
-*/
+output instrumentationKey string = insights.properties.InstrumentationKey
+output connectionString string = insights.properties.ConnectionString
