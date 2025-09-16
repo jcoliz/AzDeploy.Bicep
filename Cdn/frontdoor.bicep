@@ -21,6 +21,10 @@ param skuName string = 'Standard_AzureFrontDoor'
 @description('The host name that should be used when connecting to the origin.')
 param originHostName string
 
+@description('The custom domain name to associate with your Front Door endpoint, if any')
+param customDomainName string = ''
+
+var customDomainResourceName = replace(customDomainName, '.', '-')
 var profileName = 'TheFrontDoor'
 var originGroupName = 'TheOriginGroup'
 var originName = 'TheOrigin'
@@ -73,6 +77,18 @@ resource origin 'Microsoft.Cdn/profiles/originGroups/origins@2021-06-01' = {
   }
 }
 
+resource customDomain 'Microsoft.Cdn/profiles/customDomains@2020-09-01' = if (! empty(customDomainName)) {
+  parent: profile
+  name: customDomainResourceName
+  properties: {
+    hostName: customDomainName
+    tlsSettings: {
+      certificateType: 'ManagedCertificate'
+      minimumTlsVersion: 'TLS12'
+    }
+  }
+}
+
 resource route 'Microsoft.Cdn/profiles/afdEndpoints/routes@2021-06-01' = {
   parent: endpoint
   name: routeName
@@ -83,6 +99,11 @@ resource route 'Microsoft.Cdn/profiles/afdEndpoints/routes@2021-06-01' = {
     originGroup: {
       id: originGroup.id
     }
+    customDomains: (!empty(customDomainName)) ? [] : [
+      {
+        id: customDomain.id
+      }
+    ]
     supportedProtocols: [
       'Http'
       'Https'
@@ -97,3 +118,6 @@ resource route 'Microsoft.Cdn/profiles/afdEndpoints/routes@2021-06-01' = {
 }
 
 output frontDoorEndpointHostName string = endpoint.properties.hostName
+output customDomainValidationDnsTxtRecordName string = '_dnsauth.${customDomain.properties.hostName}'
+output customDomainValidationDnsTxtRecordValue string = customDomain.properties.validationProperties.validationToken
+output customDomainValidationExpiry string = customDomain.properties.validationProperties.expirationDate
