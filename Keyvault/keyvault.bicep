@@ -58,13 +58,17 @@ resource kv 'Microsoft.KeyVault/vaults@2023-07-01' = {
   }
 }
 
-resource secrets 'Microsoft.KeyVault/vaults/secrets@2021-04-01-preview' = [for secret in secretsObject.secrets: {
-  name: secret.secretName
-  parent: kv
-  properties: {
-    value: secret.secretValue
-  }
-}]
+// TODO: This doesn't work.
+//
+// "InvalidTemplate - Deployment template validation failed: 'The template 'copy' definition at line '1' and column '2949' has an invalid copy count of: '[length(parameters('secretsObject').secrets)]'. The copy count must be a non-negative integer value and cannot exceed '800'. Please see https://aka.ms/arm-resource-loops for usage details.'."
+//
+//resource secrets 'Microsoft.KeyVault/vaults/secrets@2024-11-01' = [for secret in secretsObject.secrets: {
+//  parent: kv
+//  name: secret.secretName
+//  properties: {
+//    value: secret.secretValue
+//  }
+//}]
 
 output name string = kv.name
 output endpoint string = kv.properties.vaultUri
