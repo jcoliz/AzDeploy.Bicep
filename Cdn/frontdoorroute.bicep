@@ -103,6 +103,6 @@ resource route 'Microsoft.Cdn/profiles/afdEndpoints/routes@2023-05-01' = {
 }
 
 output frontDoorEndpointHostName string = endpoint.properties.hostName
-output customDomainValidationDnsTxtRecordName string = '_dnsauth.${customDomain.properties.hostName}'
+output customDomainValidationDnsTxtRecordName string = '_dnsauth.${subDomain}'
 output customDomainValidationDnsTxtRecordValue string = customDomain.properties.validationProperties.validationToken
 output customDomainValidationExpiry string = customDomain.properties.validationProperties.expirationDate
