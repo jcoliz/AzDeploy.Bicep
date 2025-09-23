@@ -36,7 +36,6 @@ resource originGroup 'Microsoft.Cdn/profiles/originGroups@2023-05-01' = {
     loadBalancingSettings: {
       sampleSize: 4
       successfulSamplesRequired: 3
-      additionalLatencyInMilliseconds: 50
     }
     healthProbeSettings: {
       probePath: '/'
@@ -58,8 +57,6 @@ resource origin 'Microsoft.Cdn/profiles/originGroups/origins@2023-05-01' = {
     originHostHeader: originHostName
     priority: 1
     weight: 1000
-    enabledState: 'Enabled'
-    enforceCertificateNameCheck: true
   }
 }
 
@@ -80,15 +77,18 @@ resource customDomain 'Microsoft.Cdn/profiles/customDomains@2023-05-01' = {
 resource route 'Microsoft.Cdn/profiles/afdEndpoints/routes@2023-05-01' = {
   parent: endpoint
   name: '${subDomain}-route-${suffix}'
+  dependsOn: [
+    origin
+  ]
   properties: {
+    originGroup: {
+      id: originGroup.id
+    }
     customDomains: [
       {
         id: customDomain.id
       }
     ]
-    originGroup: {
-      id: originGroup.id
-    }
     supportedProtocols: [
       'Http'
       'Https'
@@ -100,9 +100,6 @@ resource route 'Microsoft.Cdn/profiles/afdEndpoints/routes@2023-05-01' = {
     linkToDefaultDomain: 'Enabled'
     httpsRedirect: 'Enabled'
   }
-  dependsOn: [
-    origin
-  ]
 }
 
 output frontDoorEndpointHostName string = endpoint.properties.hostName
