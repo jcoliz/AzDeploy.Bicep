@@ -29,21 +29,13 @@ resource endpoint 'Microsoft.Cdn/profiles/afdEndpoints@2023-05-01' = {
 }
 
 // Create origin group
+//
+// Note that we are not setting load balancer settings or health probes.
+// This is a single origin setup, so we don't need load balancing.
+// The default health probe settings should be fine for a static website.
 resource originGroup 'Microsoft.Cdn/profiles/originGroups@2023-05-01' = {
   parent: profile
   name: '${subDomain}-og-${suffix}'
-  properties: {
-    loadBalancingSettings: {
-      sampleSize: 4
-      successfulSamplesRequired: 3
-    }
-    healthProbeSettings: {
-      probePath: '/'
-      probeRequestType: 'HEAD'
-      probeProtocol: 'Https'
-      probeIntervalInSeconds: 100
-    }
-  }
 }
 
 // Create origin pointing to storage account
