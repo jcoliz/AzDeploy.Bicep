@@ -1,5 +1,6 @@
 //
-// Deploys Key Vault Secrets User role onto a Key Vault for a Web App
+// Deploys Key Vault Secrets User and Key Vault Reader roles onto a Key
+// Vault for a Web App
 //
 // NOTE: Deploy this onto the group of the web resource, and supply tne
 // separate name of the resource group where the KV resource is deployed
@@ -21,8 +22,8 @@ resource webapp 'Microsoft.Web/sites@2022-03-01' existing = {
   name: webAppName
 }
 
-module role '../Keyvault/secretsuserrole.bicep' = {
-  name: 'web'
+module userRole '../Keyvault/secretsuserrole.bicep' = {
+  name: 'webUser'
   scope: resourceGroup(keyVaultGroup)
   params: {
     keyVaultName: keyVaultName
@@ -31,4 +32,15 @@ module role '../Keyvault/secretsuserrole.bicep' = {
   }
 }
 
-output roleAssignmentName string = role.outputs.roleAssignmentName
+module readerRole '../Keyvault/readerrole.bicep' = {
+  name: 'webReader'
+  scope: resourceGroup(keyVaultGroup)
+  params: {
+    keyVaultName: keyVaultName
+    principalId: webapp.identity.principalId
+    principalType: 'ServicePrincipal'
+  }
+}
+
+output userRoleAssignmentName string = userRole.outputs.roleAssignmentName
+output readerRoleAssignmentName string = readerRole.outputs.roleAssignmentName
