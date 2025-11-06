@@ -28,3 +28,4 @@ output result object = {
 }
 output logAnalyticsName string = logs.name
 output name string = logs.name
+output workspaceId string = logs.properties.customerId

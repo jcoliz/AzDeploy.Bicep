@@ -33,5 +33,16 @@ module sentinel './sentinel-onboarding.bicep' = {
   }
 }
 
+module diagnostics './sentinel-diagnostics.bicep' = {
+  name: 'diagnostics'
+  dependsOn: [
+    sentinel
+  ]
+  params: {
+    logAnalyticsName: logs.outputs.name
+  }
+}
+
 output logAnalyticsName string = logs.outputs.logAnalyticsName
+output logAnalyticsWorkspaceId string = logs.outputs.workspaceId
 output sentinelId string = sentinel.outputs.sentinelId
