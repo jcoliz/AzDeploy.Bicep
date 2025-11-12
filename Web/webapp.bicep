@@ -27,10 +27,6 @@ param customDomainVerificationId string = ''
 @description('Name of optional app insights resource')
 param insightsName string = ''
 
-resource insights 'Microsoft.Insights/components@2020-02-02-preview' existing = if (!empty(insightsName)) {
-  name: insightsName
-}
-
 var insightsSettings = empty(insightsName) ? [] : [
   {
     name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
@@ -47,19 +43,23 @@ var insightsSettings = empty(insightsName) ? [] : [
   {
     name: 'XDT_MicrosoftApplicationInsights_Mode'
     value: 'default'
-  }  
+  }
 ]
+
+resource insights 'Microsoft.Insights/components@2020-02-02-preview' existing = if (!empty(insightsName)) {
+  name: insightsName
+}
 
 resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: 'farm-${suffix}'
   location: location
-  kind: 'linux'
-  properties: {
-    reserved: true
-  }
   sku: {
     name: sku
     tier: tier
+  }
+  kind: 'linux'
+  properties: {
+    reserved: true
   }
 }
 
@@ -74,7 +74,7 @@ var appsettings = concat(
       name: 'WEBSITE_HTTPLOGGING_RETENTION_DAYS'
       value: '5'
     }
-  ],  
+  ],
   insightsSettings,
   configuration
 )
@@ -91,7 +91,7 @@ resource webapp 'Microsoft.Web/sites@2023-01-01' = {
     httpsOnly: true
     customDomainVerificationId: customDomainVerificationId
     siteConfig: {
-      linuxFxVersion: 'DOTNETCORE|9.0'
+      linuxFxVersion: 'DOTNETCORE|10.0'
       appSettings: appsettings
       minTlsVersion: '1.2'
       alwaysOn: (sku == 'F1') ? false : true
@@ -102,8 +102,8 @@ resource webapp 'Microsoft.Web/sites@2023-01-01' = {
 }
 
 resource logs 'Microsoft.Web/sites/config@2023-01-01' = {
-  name: 'logs'
   parent: webapp
+  name: 'logs'
   properties: {
     applicationLogs: {
       fileSystem: {
