@@ -37,9 +37,9 @@ param administratorLoginPassword string
 param includeStorage bool = false
 
 resource kv 'Microsoft.KeyVault/vaults@2023-07-01' existing = if (!empty(keyVaultName)) {
-  name: keyVaultName
   scope: resourceGroup(keyVaultGroup)
-} 
+  name: keyVaultName
+}
 
 module logs '../OperationalInsights/loganalytics.bicep' = {
   name: 'logs'
@@ -99,7 +99,7 @@ module certificate './certificate.bicep' = if (!empty(customDomain))  {
     location: location
     customDomain: customDomain
     webAppName: web.outputs.webAppName
-    hostingPlanName: web.outputs.hostingPlanName 
+    hostingPlanName: web.outputs.hostingPlanName
   }
 }
 
@@ -137,4 +137,5 @@ output sqlServerName string = sql.outputs.serverName
 output sqlDbName string = sql.outputs.dbName
 output webAppName string = web.outputs.webAppName
 output storageName string = storage.outputs.storageName
-output roleAssignmentName string = !empty(keyVaultName) ? kvrole.outputs.roleAssignmentName : ''
+output readerRoleAssignmentName string = !empty(keyVaultName) ? kvrole.outputs.readerRoleAssignmentName : ''
+output userRoleAssignmentName string = !empty(keyVaultName) ? kvrole.outputs.userRoleAssignmentName : ''
