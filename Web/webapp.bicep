@@ -121,6 +121,7 @@ resource logs 'Microsoft.Web/sites/config@2023-01-01' = {
 }
 
 output webAppName string = webapp.name
+output webAppDefaultHostName string = webapp.properties.defaultHostName
 output hostingPlanName string = hostingPlan.name
 output webPrincipal string = webapp.identity.principalId
 output webTenant string = webapp.identity.tenantId
