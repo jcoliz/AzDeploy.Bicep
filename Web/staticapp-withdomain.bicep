@@ -19,7 +19,7 @@ param sku string = 'Free'
 param tier string = 'Free'
 
 @description('Custom domain name')
-param customDomain string
+param customDomain string = ''
 
 resource staticapp 'Microsoft.Web/staticSites@2023-12-01' = {
   name: '${prefix}-${suffix}'
@@ -36,7 +36,7 @@ resource staticapp 'Microsoft.Web/staticSites@2023-12-01' = {
   }
 }
 
-resource domain 'Microsoft.Web/staticSites/customDomains@2023-12-01' = {  
+resource domain 'Microsoft.Web/staticSites/customDomains@2023-12-01' = if (!empty(customDomain)) {  
   parent: staticapp
   name: customDomain
 }
