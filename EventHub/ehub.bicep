@@ -31,7 +31,7 @@ param sku string = 'Basic'
 @description('Number of provisioned units.')
 param capacity int = 1
 
-resource namespace 'Microsoft.EventHub/namespaces@2022-10-01-preview' = {
+resource namespace 'Microsoft.EventHub/namespaces@2024-01-01' = {
   name: '${prefix}-${suffix}'
   location: location
   sku: {
@@ -50,7 +50,7 @@ resource namespace 'Microsoft.EventHub/namespaces@2022-10-01-preview' = {
   }
 }
 
-resource sendkey 'Microsoft.EventHub/namespaces/authorizationrules@2022-10-01-preview' = {
+resource sendkey 'Microsoft.EventHub/namespaces/authorizationrules@2024-01-01' = {
   parent: namespace
   name: sendkeyname
   properties: {
@@ -60,17 +60,19 @@ resource sendkey 'Microsoft.EventHub/namespaces/authorizationrules@2022-10-01-pr
   }
 }
 
-resource listenkey 'Microsoft.EventHub/namespaces/authorizationrules@2022-10-01-preview' = {
-  parent: namespace
-  name: sendkeyname
+// Unsure about this! Old code ignored the listenkey name and added listen
+// Properties onto send key?!
+/*resource listenkey 'Microsoft.EventHub/namespaces/authorizationrules@2024-01-01' = {
+ parent: namespace
+  name: listenkeyname
   properties: {
     rights: [
       'Listen'
     ]
   }
-}
+}*/
 
-resource ehub 'Microsoft.EventHub/namespaces/eventhubs@2022-10-01-preview' = {
+resource ehub 'Microsoft.EventHub/namespaces/eventhubs@2024-01-01' = {
   parent: namespace
   name: hubname
   properties: {
@@ -95,3 +97,4 @@ output id string = namespace.id
 output sendkey string = sendkey.name
 output hub string = ehub.name
 output listenkey string = listenkeyname
+output serviceBusEndpoint string = namespace.properties.serviceBusEndpoint
