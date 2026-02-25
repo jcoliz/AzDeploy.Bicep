@@ -9,7 +9,7 @@ param name string
 @description('Name of storage account')
 param account string
 
-resource container 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-09-01' = {
+resource container 'Microsoft.Storage/storageAccounts/blobServices/containers@2024-01-01' = {
   name: '${account}/default/${name}'
   properties: {
     publicAccess: 'None'

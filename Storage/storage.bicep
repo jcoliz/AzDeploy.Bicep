@@ -15,6 +15,9 @@ param location string = resourceGroup().location
 @description('SKU name.')
 param sku string = 'Standard_LRS'
 
+@description('Whether to enable hierarchical namespace for the storage account. Required to use storage account as a data lake.')
+param isHnsEnabled bool = false
+
 resource storage 'Microsoft.Storage/storageAccounts@2024-01-01' = {
   name: '${prefix}000${suffix}'
   location: location
@@ -24,6 +27,7 @@ resource storage 'Microsoft.Storage/storageAccounts@2024-01-01' = {
   kind: 'StorageV2'
   properties: {
     accessTier: 'Hot'
+    isHnsEnabled: isHnsEnabled
   }
 }
 
