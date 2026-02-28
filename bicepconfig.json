@@ -1,0 +1,10 @@
+{
+  "experimentalFeaturesEnabled": {
+    "extensibility": true,
+    "dynamicTypeLoading": true,
+    "providerRegistry": true
+  },
+  "extensions": {
+    "microsoftGraph": "br/public:microsoftgraph/v1.0:1.7.0"
+  }
+}
