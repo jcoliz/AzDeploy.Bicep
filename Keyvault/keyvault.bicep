@@ -34,9 +34,10 @@ param enabledForTemplateDeployment bool = false
 @description('Specifies the Azure Active Directory tenant ID that should be used for authenticating requests to the key vault. Get it by using Get-AzSubscription cmdlet.')
 param tenantId string = subscription().tenantId
 
-@description('Specifies all secrets {"secretName":"","secretValue":""} wrapped in a secure object.')
-@secure()
-param secretsObject object
+// NOTE: This doesn't work to set secrets at deployment time, see below
+//@description('Specifies all secrets {"secretName":"","secretValue":""} wrapped in a secure object.')
+//@secure()
+//param secretsObject object
 
 resource kv 'Microsoft.KeyVault/vaults@2023-07-01' = {
   name: '${prefix}-${suffix}'
