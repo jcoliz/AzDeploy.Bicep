@@ -19,12 +19,23 @@ param webImageName string = 'nginxdemos/hello:latest'
 param ingressPort int = 80
 
 @description('Array of environment vars')
+@metadata({
+  example: [
+    {
+      name: 'ENVIRONMENT_VAR_NAME'
+      value: 'value'
+    }
+    {
+      name: 'SECRET_VAR_NAME'
+      secretRef: 'secret-name'
+    }
+  ]
+  definition: 'https://learn.microsoft.com/en-us/azure/templates/microsoft.app/containerapps?pivots=deployment-language-bicep#environmentvar'
+})
 param env array = []
 
-// Deploy Log Anaytics Workspace
+// Deploy Log Analytics Workspace
 
-// TODO: Should allow to send this in, in case we are already deploying
-// an LAW and we just want to use that.
 module applogs '../OperationalInsights/loganalytics.bicep' = {
   name: 'applogs'
   params: {
@@ -34,40 +45,19 @@ module applogs '../OperationalInsights/loganalytics.bicep' = {
   }
 }
 
-// Deploy Container App Environment
+// Deploy Container App Environment and Web Container App
 
-module cenv './managedEnvironments.bicep' = {
-  name: 'cenv'
+module containerAppWithEnv './containerAppWithEnvironment.bicep' = {
+  name: 'containerAppWithEnv'
   params: {
     suffix: suffix
     location: location
     logAnalyticsName: applogs.outputs.name
-  }
-}
-
-// Deploy Web Container App
-
-module cweb './containerApp.bicep' = {
-  name: 'c-web'
-  params: {
-    prefix: 'c-web'
-    suffix: suffix
-    location: location
-    containerAppEnvName: cenv.outputs.name
+    webImageName: webImageName
     ingressPort: ingressPort
-    containers: [
-      {        
-        name: 'web'
-        image: webImageName
-        resources: {
-          cpu: json('0.25')
-          memory: '.5Gi'
-        }
-        env: env
-      }
-    ]
+    env: env
   }
 }
 
-output fqdn string = cweb.outputs.fqdn
-output principal string = cweb.outputs.principal
+output fqdn string = containerAppWithEnv.outputs.fqdn
+output principal string = containerAppWithEnv.outputs.principal
