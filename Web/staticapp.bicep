@@ -9,8 +9,15 @@ param prefix string = 'static'
 @description('Unique suffix for all resources in this deployment')
 param suffix string = uniqueString(resourceGroup().id)
 
-@description('Location for all resources.')
-param location string = resourceGroup().location
+@description('Location for all resources. Static Web Apps are only available in a limited set of regions.')
+@allowed([
+  'westus2'
+  'centralus'
+  'eastus2'
+  'westeurope'
+  'eastasia'
+])
+param location string
 
 @description(' 	Name of the resource SKU.')
 param sku string = 'Free'
