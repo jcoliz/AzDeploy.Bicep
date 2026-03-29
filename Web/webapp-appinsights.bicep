@@ -65,5 +65,6 @@ module certificate './certificate.bicep' = if (!empty(customDomain))  {
 
 output webAppName string = web.outputs.webAppName
 output webAppDefaultHostName string = web.outputs.webAppDefaultHostName
+output webPrincipal string = web.outputs.webPrincipal
 output logAnalyticsName string = logs.outputs.logAnalyticsName
 output appInsightsName string = insights.outputs.name
