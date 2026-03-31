@@ -30,11 +30,11 @@ param insightsName string = ''
 var insightsSettings = empty(insightsName) ? [] : [
   {
     name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
-    value: insights.properties.ConnectionString
+    value: insights!.properties.ConnectionString
   }
   {
     name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
-    value: insights.properties.InstrumentationKey
+    value: insights!.properties.InstrumentationKey
   }
   {
     name: 'ApplicationInsightsAgent_EXTENSION_VERSION'
