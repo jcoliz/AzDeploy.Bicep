@@ -27,6 +27,8 @@ param customDomainVerificationId string = ''
 @description('Name of optional app insights resource')
 param insightsName string = ''
 
+// Modern web stack doesn't require the Application Insights agent, so we disable it and just use the connection string for telemetry. 
+// See https://learn.microsoft.com/en-us/azure/azure-monitor/app/asp-net-core?tabs=netcore31#agent-vs-sdk for more details.
 var insightsSettings = empty(insightsName) ? [] : [
   {
     name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
@@ -38,7 +40,7 @@ var insightsSettings = empty(insightsName) ? [] : [
   }
   {
     name: 'ApplicationInsightsAgent_EXTENSION_VERSION'
-    value: '~3'
+    value: 'disabled'
   }
   {
     name: 'XDT_MicrosoftApplicationInsights_Mode'
