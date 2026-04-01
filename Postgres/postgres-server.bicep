@@ -17,19 +17,8 @@ param suffix string = uniqueString(resourceGroup().id)
 @description('Location for all resources.')
 param location string = resourceGroup().location
 
-@description('Object ID of the Entra admin principal')
-param entraAdminPrincipalId string
-
-@description('UPN or display name of the Entra admin principal (required by the Azure API)')
-param entraAdminPrincipalName string
-
-@description('Type of the Entra admin principal')
-@allowed([
-  'User'
-  'Group'
-  'ServicePrincipal'
-])
-param entraAdminPrincipalType string = 'User'
+@description('Array of Entra admin principals. Each element: { principalId: string, principalName: string, principalType: "User" | "Group" | "ServicePrincipal" }')
+param entraAdmins array
 
 var skuName = 'Standard_B1ms'
 var skuTier = 'Burstable'
@@ -68,19 +57,20 @@ resource firewallAllowAzure 'Microsoft.DBforPostgreSQL/flexibleServers/firewallR
   }
 }
 
-// Entra admin assignment
-resource admin 'Microsoft.DBforPostgreSQL/flexibleServers/administrators@2024-08-01' = {
+// Entra admin assignments — serialized because Azure PostgreSQL does not support parallel admin writes
+@batchSize(1)
+resource admins 'Microsoft.DBforPostgreSQL/flexibleServers/administrators@2024-08-01' = [for admin in entraAdmins: {
   parent: server
-  name: entraAdminPrincipalId
+  name: admin.principalId
   properties: {
-    principalName: entraAdminPrincipalName
-    principalType: entraAdminPrincipalType
+    principalName: admin.principalName
+    principalType: admin.principalType
     tenantId: subscription().tenantId
   }
   dependsOn: [
     firewallAllowAzure
   ]
-}
+}]
 
 output serverName string = server.name
 output serverFqdn string = server.properties.fullyQualifiedDomainName

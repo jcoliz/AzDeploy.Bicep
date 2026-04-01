@@ -11,7 +11,7 @@ param serverName string
 
 @minLength(2)
 @description('Name of the database to create')
-param databaseName string = 'db'
+param databaseName string
 
 resource server 'Microsoft.DBforPostgreSQL/flexibleServers@2024-08-01' existing = {
   name: serverName
